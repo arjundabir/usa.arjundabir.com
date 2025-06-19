@@ -3,14 +3,11 @@
 import { StateAbbreviations, USAMap } from "@mirawision/usa-map-react";
 import { useMemo, useState } from "react";
 import styles from "@/components/usa-map-client.module.css";
+import { createClient } from "@/utils/supabase/client";
 
-export default function USAMapClient() {
-  const [selectedStates, setSelectedStates] = useState<string[]>([]);
-
-  function handleClick(state: string) {
-    console.log(state);
-    return;
-  }
+export default function USAMapClient({ states }: { states?: string[] }) {
+  const supabase = createClient();
+  const [selectedStates, setSelectedStates] = useState<string[]>(states || []);
 
   const mapSettings = useMemo(() => {
     const settings: Record<string, any> = {};
@@ -18,12 +15,26 @@ export default function USAMapClient() {
     StateAbbreviations.forEach((state) => {
       settings[state] = {
         fill: selectedStates.includes(state) ? "#000" : undefined,
-        onClick: () =>
-          setSelectedStates(
-            selectedStates.includes(state)
-              ? selectedStates.filter((s) => s !== state)
-              : [...selectedStates, state]
-          ),
+        stroke: selectedStates.includes(state) ? "#fff" : undefined,
+        onClick: async () => {
+          const isSelected = selectedStates.includes(state);
+          const newStates = isSelected
+            ? selectedStates.filter((s) => s !== state)
+            : [...selectedStates, state];
+          try {
+            const { error } = await supabase
+              .from("states")
+              .update({ states: newStates })
+              .eq("id", 1);
+            if (error) {
+              console.error("Supabase update error:", error);
+              return;
+            }
+            setSelectedStates(newStates);
+          } catch (err) {
+            console.error("Error updating state:", err);
+          }
+        },
       };
     });
 
@@ -36,9 +47,6 @@ export default function USAMapClient() {
       defaultState={{
         fill: "#fff",
         stroke: "#000",
-        onClick(state) {
-          handleClick(state);
-        },
       }}
       customStates={mapSettings}
     />

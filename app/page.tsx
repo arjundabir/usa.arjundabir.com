@@ -1,12 +1,18 @@
 import Link from "next/link";
 import USAMapClient from "../components/usa-map-client";
 import LogoAnimation from "@/components/logo-animation";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: states, error } = await supabase
+    .from("states")
+    .select("states");
+  console.log(states);
   return (
     <div className="flex flex-col h-svh">
       <main className="flex-1 flex justify-center items-center ">
-        <USAMapClient />
+        <USAMapClient states={states[0].states} />
       </main>
       <footer className="">
         <Link href={"/"}>
