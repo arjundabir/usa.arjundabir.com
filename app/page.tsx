@@ -1,5 +1,5 @@
 import Link from "next/link";
-import USAMapClient from "./usa-map-client";
+import USAMapClient from "../components/usa-map-client";
 import LogoAnimation from "@/components/logo-animation";
 
 export default function Home() {
@@ -9,13 +9,18 @@ export default function Home() {
         <USAMapClient />
       </main>
       <footer className="">
-        <Link href={"https://arjundabir.com"}>
-          <p className="text-center hover:underline hover:cursor-pointer">
-            states i've visited
+        <Link href={"/"}>
+          <p className=" grid grid-cols-3 w-full px-4">
+            <span className="text-center hover:underline hover:cursor-pointer col-start-2 text-sm md:text-base">
+              states i've visited
+            </span>
+            <span className="text-right hover:underline hover:cursor-pointer col-start-3 text-sm md:text-base">
+              create your own
+            </span>
           </p>
         </Link>
         <div className="h-10">
-          <Link href={"/"}>
+          <Link href={"https://arjundabir.com"}>
             <LogoAnimation />
           </Link>
         </div>

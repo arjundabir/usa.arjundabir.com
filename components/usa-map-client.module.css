@@ -1,0 +1,6 @@
+.usaMap {
+}
+
+.usaMap :global(.usa-state:hover) {
+  fill: #000;
+}
