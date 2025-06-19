@@ -5,24 +5,23 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function Home() {
   const supabase = await createClient();
-  const { data: states, error } = await supabase
-    .from("states")
-    .select("states");
+  const { data: states } = await supabase.from("states").select("states");
+
   console.log(states);
   return (
     <div className="flex flex-col h-svh">
       <main className="flex-1 flex justify-center items-center ">
-        <USAMapClient states={states[0].states} />
+        <USAMapClient states={states![0].states} />
       </main>
       <footer className="">
         <Link href={"/"}>
           <p className=" grid grid-cols-3 w-full px-4">
             <span className="text-center hover:underline hover:cursor-pointer col-start-2 text-sm md:text-base">
-              states i've visited
+              states i&apos;ve visited
             </span>
-            <span className="text-right hover:underline hover:cursor-pointer col-start-3 text-sm md:text-base">
+            {/* <span className="text-right hover:underline hover:cursor-pointer col-start-3 text-sm md:text-base">
               create your own
-            </span>
+            </span> */}
           </p>
         </Link>
         <div className="h-10">

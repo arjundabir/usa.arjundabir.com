@@ -5,12 +5,18 @@ import { useMemo, useState } from "react";
 import styles from "@/components/usa-map-client.module.css";
 import { createClient } from "@/utils/supabase/client";
 
+type StateSettings = {
+  fill?: string;
+  stroke?: string;
+  onClick: () => Promise<void>;
+};
+
 export default function USAMapClient({ states }: { states?: string[] }) {
   const supabase = createClient();
   const [selectedStates, setSelectedStates] = useState<string[]>(states || []);
 
   const mapSettings = useMemo(() => {
-    const settings: Record<string, any> = {};
+    const settings: Record<string, StateSettings> = {};
 
     StateAbbreviations.forEach((state) => {
       settings[state] = {
@@ -39,7 +45,7 @@ export default function USAMapClient({ states }: { states?: string[] }) {
     });
 
     return settings;
-  }, [selectedStates]);
+  }, [selectedStates, supabase]);
 
   return (
     <USAMap
